@@ -1,7 +1,7 @@
 package com.example.PWO_projekt.models;
 import jakarta.persistence.*;
 @Entity
-@Table(name="restaurant_orders")
+@Table(name="students")
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
