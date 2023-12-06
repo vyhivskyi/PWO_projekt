@@ -13,8 +13,12 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/students")
 public class StudentController {
+    private final StudentRepository studentRepository;
+
     @Autowired
-    private StudentRepository studentRepository;
+    public StudentController(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
 
     @GetMapping
     public List<Student> getAllStudents(){
