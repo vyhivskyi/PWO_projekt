@@ -22,7 +22,7 @@ public class StudentController {
 
     @GetMapping
     public List<Student> getAllStudents(){
-        return studentRepository.findAll();
+        return studentRepository.customFindAll();
     }
 
     @GetMapping("/{id}")
@@ -42,10 +42,23 @@ public class StudentController {
         if (!studentRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        student.setId(id);
-        Student updatedStudent = studentRepository.save(student);
-        return ResponseEntity.ok(updatedStudent);
+
+        Student existingStudent = studentRepository.findById(id).orElse(null);
+        if (existingStudent != null) {
+            // Preserve the existing room information if not provided in the request
+            if (student.getRoom() == null) {
+                student.setRoom(existingStudent.getRoom());
+            }
+
+            student.setId(id);
+            Student updatedStudent = studentRepository.save(student);
+
+            return ResponseEntity.ok(updatedStudent);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
@@ -56,5 +69,6 @@ public class StudentController {
         studentRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
 }
 
