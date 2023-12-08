@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface StudentRepository extends CrudRepository<Student, Long> {
     @Query("SELECT s FROM Student s")
-    List<Student> findAll();
+    List<Student> customFindAll();
 }

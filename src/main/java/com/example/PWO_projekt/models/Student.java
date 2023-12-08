@@ -11,6 +11,10 @@ public class Student {
     private String email;
     private int yearOfStudy;
 
+    @ManyToOne
+    @JoinColumn(name="room_id")
+    private Room room;
+
     public Student(String firstName, String lastName, String email, int yearOfStudy) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -60,4 +64,10 @@ public class Student {
         this.id = id;
     }
 
+    public Room getRoom() {
+        return room;
+    }
+    public void setRoom(Room room) {
+        this.room = room;
+    }
 }
