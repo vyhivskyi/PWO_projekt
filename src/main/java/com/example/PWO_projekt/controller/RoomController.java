@@ -27,7 +27,12 @@ public class RoomController {
 
     @GetMapping
     public List<Room> getAllRooms() {
-        return roomRepository.findAll();
+        try {
+            return roomRepository.findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @GetMapping("/{id}")
@@ -50,6 +55,19 @@ public class RoomController {
         room.setId(id);
         Room updatedRoom = roomRepository.save(room);
         return ResponseEntity.ok(updatedRoom);
+    }
+
+    @GetMapping("/{roomId}/inhabitants")
+    public ResponseEntity<List<Student>> getRoomInhabitants(@PathVariable Long roomId) {
+        Optional<Room> roomOptional = roomRepository.findById(roomId);
+
+        if (roomOptional.isPresent()) {
+            Room room = roomOptional.get();
+            List<Student> inhabitants = room.getStudents();
+            return ResponseEntity.ok(inhabitants);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -80,17 +98,24 @@ public class RoomController {
         }
     }
 
-    @PutMapping("/{roomId}/remove-student")
-    public ResponseEntity<Room> removeStudentFromRoom(@PathVariable Long roomId) {
+    @PutMapping("/{roomId}/remove-student/{studentId}")
+    public ResponseEntity<Room> removeStudentFromRoom(@PathVariable Long roomId, @PathVariable Long studentId) {
         Optional<Room> roomOptional = roomRepository.findById(roomId);
 
         if (roomOptional.isPresent()) {
             Room room = roomOptional.get();
 
-            room.removeStudent();
-            roomRepository.save(room);
+            Optional<Student> studentOptional = studentRepository.findById(studentId);
+            if (studentOptional.isPresent()) {
+                Student student = studentOptional.get();
 
-            return ResponseEntity.ok(room);
+                room.removeStudent(student);
+                roomRepository.save(room);
+
+                return ResponseEntity.ok(room);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         } else {
             return ResponseEntity.notFound().build();
         }

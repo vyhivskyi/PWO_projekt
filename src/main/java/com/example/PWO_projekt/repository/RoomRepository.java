@@ -8,7 +8,6 @@ import java.util.List;
 
 
 public interface RoomRepository extends CrudRepository<Room, Long> {
-    @Query("SELECT r FROM Room r")
     List<Room> findAll();
 }
 

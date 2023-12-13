@@ -1,4 +1,6 @@
 package com.example.PWO_projekt.models;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 @Entity
 @Table(name="students")
@@ -13,6 +15,7 @@ public class Student {
 
     @ManyToOne
     @JoinColumn(name="room_id")
+    @JsonIgnoreProperties("students")
     private Room room;
 
     public Student(String firstName, String lastName, String email, int yearOfStudy) {
