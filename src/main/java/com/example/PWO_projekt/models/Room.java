@@ -1,6 +1,10 @@
 package com.example.PWO_projekt.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="rooms")
@@ -11,8 +15,9 @@ public class Room {
     private int roomNumber;
     private int roomDorm;
 
-    @OneToOne(mappedBy = "room", cascade = CascadeType.ALL)
-    private Student student;
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Student> students = new ArrayList<>();
 
     public Room(int roomNumber, int roomDorm) {
         this.roomNumber = roomNumber;
@@ -22,7 +27,7 @@ public class Room {
     public Room() {
     }
 
-        public int getRoomNumber() {
+    public int getRoomNumber() {
         return roomNumber;
     }
     public void setRoomNumber(Integer roomNumber) {
@@ -44,14 +49,15 @@ public class Room {
     }
 
     public void assignStudent(Student student) {
-        this.student = student;
+        students.add(student);
         student.setRoom(this);
     }
 
-    public void removeStudent() {
-        if (this.student != null) {
-            this.student.setRoom(null);
-            this.student = null;
-        }
+    public void removeStudent(Student student) {
+        students.remove(student);
+        student.setRoom(null);
+    }
+    public List<Student> getStudents() {
+        return students;
     }
 }

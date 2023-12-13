@@ -22,7 +22,7 @@ public class StudentController {
 
     @GetMapping
     public List<Student> getAllStudents(){
-        return studentRepository.customFindAll();
+        return studentRepository.findAll();
     }
 
     @GetMapping("/{id}")
